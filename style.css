@@ -66,3 +66,46 @@ button:hover {
   margin-top: 15px;
   font-weight: 600;
 }
+/* DROPDOWN MULTI-SELECT */
+
+.dropdown {
+  position: relative;
+  margin-top: 6px;
+}
+
+.dropdown-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d9d9e3;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #d9d9e3;
+  border-radius: 10px;
+  margin-top: 5px;
+  padding: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+  z-index: 100;
+}
+
+.dropdown-content label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: normal;
+}
+
+.error-text {
+  color: #b00020;
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
