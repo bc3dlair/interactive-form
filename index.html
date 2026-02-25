@@ -50,32 +50,7 @@
         <label for="itemDesc">What item would you like printed? <span class="req">*</span></label>
         <textarea id="itemDesc" name="Item Description" rows="4" required minlength="10"></textarea>
 
-        <label for="fileAvailable">Do you have a file?</label>
-        <select id="fileAvailable" name="File Available">
-          <option value="No file - need design help">No file - need design help</option>
-          <option value="STL file ready">STL file ready</option>
-          <option value="3MF file ready">3MF file ready</option>
-          <option value="OBJ file ready">OBJ file ready</option>
-          <option value="AMF file ready">AMF file ready</option>
-          <option value="Other format">Other format</option>
-        </select>
-
-        <label for="uploadFile">Upload your file (optional)</label>
-        <input
-          id="uploadFile"
-          type="file"
-          name="Local File Selected (not attached)"
-          accept=".stl,.3mf,.obj,.amf,.png,.jpg,.jpeg,.pdf"
-        />
-        <p class="note">
-          Accepted: STL, 3MF, OBJ, AMF, PNG, JPEG, PDF. <strong>Note:</strong> this website cannot attach files to email automatically.
-          Upload your file to Google Drive/Dropbox and paste the share link below.
-        </p>
-
-        <label for="fileLink">File link (Google Drive/Dropbox) (recommended)</label>
-        <input id="fileLink" type="url" name="File Link" placeholder="Paste a share link here" />
-        <p id="fileLinkError" class="error-text" aria-live="polite"></p>
-
+        <!-- COLORS -->
         <label>Preferred Colors (Select up to 4) <span class="req">*</span></label>
         <div class="dropdown" id="colorDropdown">
           <button type="button" class="dropdown-btn" id="colorDropdownBtn" aria-expanded="false">Select Colors</button>
@@ -159,33 +134,10 @@ Submission of this form does not guarantee order acceptance. Orders are confirme
         </div>
       </section>
 
-      <section class="card" id="humanCheckCard">
-        <h2>Human Verification</h2>
-
-        <!-- Honeypot (hidden) -->
-        <div class="hp-wrap" aria-hidden="true">
-          <label for="website">Website</label>
-          <input id="website" name="website" type="text" autocomplete="off" tabindex="-1" />
-        </div>
-
-        <input type="hidden" id="formLoadedAt" name="Form Loaded At (ISO)" value="" />
-
-        <label class="disclaimer-check">
-          <input type="checkbox" id="notRobotCheck" />
-          I’m not a robot <span class="req">*</span>
-        </label>
-
-        <label for="humanAnswer">Quick check: <span id="humanQuestion"></span> <span class="req">*</span></label>
-        <input id="humanAnswer" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter the answer" />
-
-        <p id="humanError" class="error-text" aria-live="polite"></p>
-      </section>
-
       <div class="actions">
         <div class="email-notice">
           <strong>Important:</strong> After clicking submit, your email app will open with your order details pre-filled.
           You must click <strong>Send</strong> in your email app to complete your request.
-          If you selected a file above, attach it manually before sending.
         </div>
 
         <button type="submit" id="submitBtn">Create Email to Send</button>
