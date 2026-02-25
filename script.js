@@ -45,20 +45,6 @@ $$('input[name="Color"]').forEach((cb) => {
   });
 });
 
-// ===== File validation =====
-const fileInput = $("#uploadFile");
-const allowedExt = new Set(["stl", "3mf", "obj", "amf", "png", "jpg", "jpeg", "pdf"]);
-
-fileInput.addEventListener("change", () => {
-  const f = fileInput.files?.[0];
-  if (!f) return;
-  const ext = f.name.split(".").pop().toLowerCase();
-  if (!allowedExt.has(ext)) {
-    alert("Invalid file type. Allowed: STL, 3MF, OBJ, AMF, PNG, JPEG, PDF.");
-    fileInput.value = "";
-  }
-});
-
 // ===== Scroll-to-bottom enables terms checkbox =====
 const termsBox = $("#termsBox");
 const agreeTerms = $("#agreeTerms");
@@ -125,68 +111,13 @@ sigCanvas.addEventListener("touchend", endDraw);
 
 sigClear.addEventListener("click", clearSignature);
 
-// ===== Human verification =====
-const hpField = $("#website");                 // honeypot
-const formLoadedAt = $("#formLoadedAt");       // timestamp at load
-const notRobotCheck = $("#notRobotCheck");     // checkbox
-const humanQuestion = $("#humanQuestion");     // text
-const humanAnswer = $("#humanAnswer");         // input
-const humanError = $("#humanError");           // error
-
-let expectedHumanAnswer = null;
-
-function initHumanCheck() {
-  formLoadedAt.value = new Date().toISOString();
-  const a = Math.floor(Math.random() * 9) + 1;
-  const b = Math.floor(Math.random() * 9) + 1;
-  expectedHumanAnswer = a + b;
-  humanQuestion.textContent = `${a} + ${b} = ?`;
-}
-initHumanCheck();
-
 // ===== Mailto submit =====
 const typedSignature = $("#typedSignature");
-const fileAvailable = $("#fileAvailable");
-const fileLink = $("#fileLink");
-const fileLinkError = $("#fileLinkError");
-
-function needsFileLink() {
-  const hasFileSelected = fileInput.files && fileInput.files.length > 0;
-  const saysHasFile = fileAvailable.value !== "No file - need design help";
-  return hasFileSelected || saysHasFile;
-}
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   statusEl.textContent = "";
-  fileLinkError.textContent = "";
   termsError.textContent = "";
-  humanError.textContent = "";
-
-  // Robot checks
-  if (hpField.value.trim() !== "") {
-    statusEl.textContent = "Submission blocked.";
-    return;
-  }
-
-  const loaded = new Date(formLoadedAt.value).getTime();
-  if (Date.now() - loaded < 5000) {
-    humanError.textContent = "Please wait a few seconds and try again.";
-    return;
-  }
-
-  if (!notRobotCheck.checked) {
-    humanError.textContent = "Please check “I’m not a robot”.";
-    return;
-  }
-
-  const ans = Number(String(humanAnswer.value || "").trim());
-  if (!Number.isFinite(ans) || ans !== expectedHumanAnswer) {
-    humanError.textContent = "Incorrect answer. Please try again.";
-    initHumanCheck();
-    humanAnswer.value = "";
-    return;
-  }
 
   // Validate colors
   const selectedColors = getSelectedColors();
@@ -202,7 +133,7 @@ form.addEventListener("submit", (e) => {
     return;
   }
 
-  // Validate required fields
+  // Validate required fields via HTML validity
   const requiredIds = ["fullName", "email", "itemDesc", "quantity", "typedSignature"];
   for (const id of requiredIds) {
     const el = $("#" + id);
@@ -213,17 +144,9 @@ form.addEventListener("submit", (e) => {
     }
   }
 
-  // Typed signature
   if (!typedSignature.value.trim()) {
     statusEl.textContent = "Please type your digital signature (full name).";
     typedSignature.focus();
-    return;
-  }
-
-  // File link requirement when file is involved
-  if (needsFileLink() && !fileLink.value.trim()) {
-    fileLinkError.textContent = "Please paste a Google Drive/Dropbox share link for your file.";
-    fileLink.focus();
     return;
   }
 
@@ -241,30 +164,18 @@ form.addEventListener("submit", (e) => {
   lines.push(`Drawn Signature: ${hasInk ? "YES" : "No"}`);
   lines.push("");
 
-  const file = fileInput.files?.[0];
-  if (file) {
-    lines.push(`Local File Selected (not attached): ${file.name}`);
-    lines.push("");
-  }
-
   const fd = new FormData(form);
   fd.forEach((value, key) => {
-    if (key === "Color") return;
-    if (key === "website") return; // honeypot
-    if (key === "Form Loaded At (ISO)") return;
-    if (value instanceof File) return;
+    if (key === "Color") return; // already added
     if (String(value).trim() === "") return;
     lines.push(`${key}: ${value}`);
     lines.push("");
   });
 
   lines.push("NOTE: Your email app opened with this message. Please click SEND to complete your request.");
-  lines.push("If you have files, attach them manually OR include a share link above.");
 
   const subject = "New Custom 3D Order Request";
   const body = lines.join("\n");
-
-  // mailto length limits vary; keep it text-only
   const mailto = `mailto:bc.3d.lair@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   statusEl.textContent = "Opening your email app...";
