@@ -1,233 +1,184 @@
-const $ = (sel) => document.querySelector(sel);
-const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+:root { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
 
-const form = $("#orderForm");
-const statusEl = $("#formStatus");
+body { background: #f4f6f8; margin: 0; padding: 20px; }
 
-// ===== Color dropdown (max 4) =====
-const dropdownBtn = $("#colorDropdownBtn");
-const dropdownContent = $("#colorDropdownContent");
-const colorError = $("#colorError");
-
-function getSelectedColors() {
-  return $$('input[name="Color"]:checked').map((c) => c.value);
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
 }
 
-function updateColorButtonText() {
-  const selected = getSelectedColors();
-  dropdownBtn.textContent = selected.length ? selected.join(", ") : "Select Colors";
+.header h1 { margin: 0 0 8px 0; text-align: center; }
+
+.intro { margin: 12px 0 22px 0; color: #333; line-height: 1.45; }
+
+.contact a { color: #111; font-weight: 650; text-decoration: none; }
+.contact a:hover { text-decoration: underline; }
+
+.card {
+  border: 1px solid #e6e7ee;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+  background: #fff;
 }
 
-function setDropdownOpen(open) {
-  dropdownContent.style.display = open ? "block" : "none";
-  dropdownBtn.setAttribute("aria-expanded", open ? "true" : "false");
+.card h2 { margin: 0 0 12px 0; font-size: 1.05rem; }
+
+label { display: block; margin-top: 14px; font-weight: 650; }
+
+.req { color: #b00020; }
+
+input, select, textarea, button {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin-top: 6px;
+  border: 1px solid #d9d9e3;
+  border-radius: 10px;
+  font-size: 0.95rem;
 }
 
-dropdownBtn.addEventListener("click", () => {
-  const isOpen = dropdownContent.style.display === "block";
-  setDropdownOpen(!isOpen);
-});
+textarea { resize: vertical; }
 
-document.addEventListener("click", (e) => {
-  if (!e.target.closest("#colorDropdown")) setDropdownOpen(false);
-});
+.note { font-size: 0.85rem; color: #666; margin: 6px 0 0 0; }
 
-$$('input[name="Color"]').forEach((cb) => {
-  cb.addEventListener("change", () => {
-    const selected = getSelectedColors();
-    if (selected.length > 4) {
-      cb.checked = false;
-      colorError.textContent = "You can select up to 4 colors only.";
-      return;
-    }
-    colorError.textContent = "";
-    updateColorButtonText();
-  });
-});
+.actions { margin-top: 10px; }
 
-// ===== File validation (extension only) =====
-const fileInput = $("#uploadFile");
-const allowedExt = new Set(["stl", "3mf", "obj", "amf", "png", "jpg", "jpeg", "pdf"]);
-fileInput.addEventListener("change", () => {
-  const f = fileInput.files?.[0];
-  if (!f) return;
-  const ext = f.name.split(".").pop().toLowerCase();
-  if (!allowedExt.has(ext)) {
-    alert("Invalid file type. Allowed: STL, 3MF, OBJ, AMF, PNG, JPEG, PDF.");
-    fileInput.value = "";
-  }
-});
-
-// ===== Scroll-to-bottom enables checkbox =====
-const termsBox = $("#termsBox");
-const agreeTerms = $("#agreeTerms");
-const termsError = $("#termsError");
-
-function enableTermsIfScrolled() {
-  const atBottom = termsBox.scrollTop + termsBox.clientHeight >= termsBox.scrollHeight - 2;
-  if (atBottom) agreeTerms.disabled = false;
-}
-termsBox.addEventListener("scroll", enableTermsIfScrolled);
-enableTermsIfScrolled();
-
-// ===== Signature canvas (optional drawn) =====
-const sigCanvas = $("#sigCanvas");
-const sigClear = $("#sigClear");
-
-let drawing = false;
-let hasInk = false;
-
-function canvasPos(e) {
-  const rect = sigCanvas.getBoundingClientRect();
-  const touch = e.touches?.[0];
-  const clientX = touch ? touch.clientX : e.clientX;
-  const clientY = touch ? touch.clientY : e.clientY;
-  return { x: clientX - rect.left, y: clientY - rect.top };
+button {
+  margin-top: 18px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 800;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
 }
 
-function startDraw(e) {
-  drawing = true;
-  hasInk = true;
-  const ctx = sigCanvas.getContext("2d");
-  const p = canvasPos(e);
-  ctx.beginPath();
-  ctx.moveTo(p.x, p.y);
-  e.preventDefault?.();
+button:hover { opacity: .9; }
+
+.status { margin-top: 12px; font-weight: 700; }
+
+.error-text { color: #b00020; font-size: 0.9rem; margin-top: 8px; }
+
+/* Dropdown multi-select */
+.dropdown { position: relative; margin-top: 6px; }
+
+.dropdown-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d9d9e3;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  font-weight: 650;
 }
 
-function draw(e) {
-  if (!drawing) return;
-  const ctx = sigCanvas.getContext("2d");
-  const p = canvasPos(e);
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.lineTo(p.x, p.y);
-  ctx.stroke();
-  e.preventDefault?.();
+.dropdown-content {
+  display: none;
+  position: absolute;
+  width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #d9d9e3;
+  border-radius: 10px;
+  margin-top: 6px;
+  padding: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+  z-index: 1000;
 }
 
-function endDraw() { drawing = false; }
+.dropdown-content label { display: block; margin: 6px 0; font-weight: 500; }
+.dropdown-content input[type="checkbox"] { width: auto; margin-right: 8px; }
 
-function clearSignature() {
-  const ctx = sigCanvas.getContext("2d");
-  ctx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-  hasInk = false;
+/* Disclaimer */
+.disclaimer-box {
+  margin-top: 10px;
+  padding: 16px;
+  border: 1px solid #d9d9e3;
+  border-radius: 12px;
+  background: #fafafa;
 }
 
-sigCanvas.addEventListener("mousedown", startDraw);
-sigCanvas.addEventListener("mousemove", draw);
-sigCanvas.addEventListener("mouseup", endDraw);
-sigCanvas.addEventListener("mouseleave", endDraw);
-
-sigCanvas.addEventListener("touchstart", startDraw, { passive: false });
-sigCanvas.addEventListener("touchmove", draw, { passive: false });
-sigCanvas.addEventListener("touchend", endDraw);
-
-sigClear.addEventListener("click", clearSignature);
-
-// ===== Mailto submit =====
-const typedSignature = $("#typedSignature");
-const fileAvailable = $("#fileAvailable");
-const fileLink = $("#fileLink");
-const fileLinkError = $("#fileLinkError");
-
-function needsFileLink() {
-  const hasFileSelected = fileInput.files && fileInput.files.length > 0;
-  const saysHasFile = fileAvailable.value !== "No file - need design help";
-  return hasFileSelected || saysHasFile;
+.disclaimer-text {
+  max-height: 210px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+  color: #444;
+  white-space: pre-line;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px dashed #d9d9e3;
+  background: #fff;
 }
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  statusEl.textContent = "";
+.disclaimer-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  font-weight: 700;
+}
 
-  // Required: colors
-  const selectedColors = getSelectedColors();
-  if (selectedColors.length === 0) {
-    colorError.textContent = "Please select at least one color.";
-    return;
-  }
-  colorError.textContent = "";
+.disclaimer-check input[type="checkbox"] { width: auto; margin-top: 0; }
 
-  // Required: terms
-  if (agreeTerms.disabled || !agreeTerms.checked) {
-    termsError.textContent = "Please scroll to the bottom and agree to the terms.";
-    return;
-  }
-  termsError.textContent = "";
+/* Signature */
+.sig-wrap {
+  margin-top: 10px;
+  border: 1px solid #d9d9e3;
+  border-radius: 12px;
+  padding: 10px;
+  background: #fff;
+}
 
-  // Required: typed signature
-  if (!typedSignature.value.trim()) {
-    statusEl.textContent = "Please type your digital signature (full name).";
-    typedSignature.focus();
-    return;
-  }
+#sigCanvas {
+  width: 100%;
+  height: 180px;
+  border: 1px dashed #d9d9e3;
+  border-radius: 10px;
+  touch-action: none;
+}
 
-  // Basic HTML validity
-  const requiredIds = ["fullName", "email", "itemDesc", "quantity", "typedSignature"];
-  for (const id of requiredIds) {
-    const el = $("#" + id);
-    if (!el.checkValidity()) {
-      statusEl.textContent = "Please fill out all required fields correctly.";
-      el.focus();
-      return;
-    }
-  }
+.sig-actions { margin-top: 10px; display: flex; gap: 10px; }
 
-  // If they say they have a file or selected one locally, strongly require a share link
-  fileLinkError.textContent = "";
-  if (needsFileLink() && !fileLink.value.trim()) {
-    fileLinkError.textContent = "Please paste a Google Drive/Dropbox share link for your file.";
-    fileLink.focus();
-    return;
-  }
+.btn-secondary {
+  width: auto;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d9d9e3;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  font-weight: 800;
+}
 
-  const now = new Date();
-  const localTime = now.toLocaleString();
-  const isoTime = now.toISOString();
+.btn-secondary:hover { background: #f4f6f8; }
 
-  // Build email body
-  const fd = new FormData(form);
-  const lines = [];
+/* Honeypot hidden */
+.hp-wrap {
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
 
-  lines.push("NEW CUSTOM 3D ORDER REQUEST");
-  lines.push("");
-  lines.push(`Agreement Timestamp (Local): ${localTime}`);
-  lines.push(`Agreement Timestamp (ISO): ${isoTime}`);
-  lines.push("");
-
-  // Add selected colors explicitly (since FormData has multiple "Color" entries)
-  lines.push(`Preferred Colors: ${selectedColors.join(", ")}`);
-  lines.push("");
-
-  // Include local file name (cannot attach)
-  const file = fileInput.files?.[0];
-  if (file) {
-    lines.push(`Local File Selected (not attached): ${file.name}`);
-    lines.push("");
-  }
-
-  // Add other fields except Colors (we already did) and file object
-  fd.forEach((value, key) => {
-    if (key === "Color") return; // handled above
-    // Browsers may include a File object; skip because not attachable
-    if (value instanceof File) return;
-    if (String(value).trim() === "") return;
-
-    lines.push(`${key}: ${value}`);
-    lines.push("");
-  });
-
-  // Add note about drawn signature
-  lines.push("Drawn Signature: " + (hasInk ? "YES (not embedded here)" : "No"));
-  lines.push("");
-  lines.push("NOTE: This email was generated from the order form website. Attach your files manually if needed.");
-
-  const subject = "New Custom 3D Order Request";
-  const body = lines.join("\n");
-
-  const mailto = `mailto:bc.3d.lair@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-  statusEl.textContent = "Opening your email app...";
-  window.location.href = mailto;
-});
+/* Email notice */
+.email-notice {
+  background: #fff4e5;
+  border: 1px solid #ffd699;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  color: #663c00;
+}
