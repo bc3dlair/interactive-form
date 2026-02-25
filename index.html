@@ -14,21 +14,37 @@
     </header>
 
     <section class="intro">
-      <p>Thank you for your interest in a custom 3D printed item! Please complete this form with as much detail as possible so I can accurately review your request and provide a quote.</p>
-      <p>Pricing is based on material cost, print time, complexity, and post-processing requirements. A quote and estimated turnaround time will be sent after reviewing your submission. A deposit may be required before printing begins. <strong>ALL ITEMS ARE PRINTED IN PLA (for the time being)</strong></p>
-      <p>If you are unsure about technical details, provide a description of what you need and I can help guide you through the options.</p>
+      <p>
+        Thank you for your interest in a custom 3D printed item! Please complete this form with as much detail as possible so I can accurately review your request and provide a quote.
+      </p>
+      <p>
+        Pricing is based on material cost, print time, complexity, and post-processing requirements. A quote and estimated turnaround time will be sent after reviewing your submission. A deposit may be required before printing begins.
+        <strong>ALL ITEMS ARE PRINTED IN PLA (for the time being)</strong>
+      </p>
+      <p>
+        If you are unsure about technical details, provide a description of what you need and I can help guide you through the options.
+      </p>
       <p>I look forward to creating something great for you!</p>
       <p>I am a small business start up please be patient</p>
 
       <div class="contact">
         <p><strong>If you have any questions contact me:</strong></p>
-        <p>Instagram: <a href="https://www.instagram.com/bc.3d.lair/" target="_blank" rel="noopener noreferrer">@bc.3d.lair</a></p>
-        <p>Facebook: <a href="https://www.facebook.com/profile.php?id=61587758056163" target="_blank" rel="noopener noreferrer">My Facebook Profile</a></p>
-        <p>Email: <a href="mailto:bc.3d.lair@gmail.com">bc.3d.lair@gmail.com</a></p>
+        <p>
+          Instagram:
+          <a href="https://www.instagram.com/bc.3d.lair/" target="_blank" rel="noopener noreferrer">@bc.3d.lair</a>
+        </p>
+        <p>
+          Facebook:
+          <a href="https://www.facebook.com/profile.php?id=61587758056163" target="_blank" rel="noopener noreferrer">My Facebook Profile</a>
+        </p>
+        <p>
+          Email:
+          <a href="mailto:bc.3d.lair@gmail.com">bc.3d.lair@gmail.com</a>
+        </p>
       </div>
     </section>
 
-    <!-- No action/method: mailto handled by JS -->
+    <!-- No action/method: handled by script.js using mailto -->
     <form id="orderForm" novalidate>
 
       <section class="card">
@@ -60,9 +76,10 @@
         <!-- Shows only if Yes -->
         <div id="uploadInstructions" class="notice hidden">
           <strong>How to include your file:</strong>
+          <p class="note"><strong>Accepted file types:</strong> STL, 3MF, OBJ, AMF, PNG, JPG/JPEG, PDF</p>
           <ol>
             <li>After you submit this form, your email app will open.</li>
-            <li><strong>Attach your file</strong> to that email (STL/3MF/OBJ/AMF, PNG/JPG, or PDF), then click <strong>Send</strong>.</li>
+            <li><strong>Attach your file/image</strong> to that email, then click <strong>Send</strong>.</li>
             <li>If attaching is hard on your device, upload it to Google Drive/Dropbox and paste a share link below.</li>
           </ol>
 
@@ -74,7 +91,10 @@
         <!-- COLORS -->
         <label>Preferred Colors (Select up to 4) <span class="req">*</span></label>
         <div class="dropdown" id="colorDropdown">
-          <button type="button" class="dropdown-btn" id="colorDropdownBtn" aria-expanded="false">Select Colors</button>
+          <button type="button" class="dropdown-btn" id="colorDropdownBtn" aria-expanded="false">
+            Select Colors
+          </button>
+
           <div class="dropdown-content" id="colorDropdownContent">
             <label><input type="checkbox" name="Color" value="Red"> Red</label>
             <label><input type="checkbox" name="Color" value="Orange"> Orange</label>
@@ -94,7 +114,7 @@
         </div>
         <p id="colorError" class="error-text" aria-live="polite"></p>
 
-        <label for="sizeEstimate">Estimated Size</label>
+        <label for="sizeEstimate">Estimated Size (may not exceed 250mm x 250mm x 250mm) </label>
         <input id="sizeEstimate" type="text" name="Size Estimate" placeholder="Example: 6in tall, 4x4in base" />
 
         <label for="quantity">Quantity <span class="req">*</span></label>
@@ -144,7 +164,14 @@ Submission of this form does not guarantee order acceptance. Orders are confirme
         </div>
 
         <label for="typedSignature">Digital Signature (Type your full name) <span class="req">*</span></label>
-        <input id="typedSignature" type="text" name="Digital Signature (Typed)" required minlength="2" placeholder="Type your full name" />
+        <input
+          id="typedSignature"
+          type="text"
+          name="Digital Signature (Typed)"
+          required
+          minlength="2"
+          placeholder="Type your full name"
+        />
       </section>
 
       <div class="actions">
