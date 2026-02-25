@@ -4,120 +4,219 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Custom 3D Order Form</title>
-
-  <!-- External CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <div class="container">
+  <main class="container">
+    <header class="header">
+      <h1>Custom 3D Order Form</h1>
+    </header>
 
-    <!-- HEADER -->
-    <h1>Custom 3D Order Form</h1>
+    <section class="intro">
+      <p>
+        Thank you for your interest in a custom 3D printed item! Please complete this form with as much detail as possible so I can accurately review your request and provide a quote.
+      </p>
+      <p>
+        Pricing is based on material cost, print time, complexity, and post-processing requirements. A quote and estimated turnaround time will be sent after reviewing your submission. A deposit may be required before printing begins. <strong>ALL ITEMS ARE PRINTED IN PLA (for the time being)</strong>
+      </p>
+      <p>
+        If you are unsure about technical details, provide a description of what you need and I can help guide you through the options.
+      </p>
+      <p>
+        I look forward to creating something great for you!
+      </p>
+      <p>
+        I am a small business start up please be patient
+      </p>
 
-    <!-- INTRO TEXT -->
-    <div class="intro">
-Thank you for your interest in a custom 3D printed item! Please complete this form with as much detail as possible so I can accurately review your request and provide a quote.
+      <div class="contact">
+        <p><strong>If you have any questions contact me:</strong></p>
+        <p>
+          Instagram:
+          <a href="https://www.instagram.com/bc.3d.lair/" target="_blank" rel="noopener noreferrer">@bc.3d.lair</a>
+        </p>
+        <p>
+          Facebook:
+          <a href="https://www.facebook.com/profile.php?id=61587758056163" target="_blank" rel="noopener noreferrer">My Facebook Profile</a>
+        </p>
+        <p>
+          Email:
+          <a href="mailto:bc.3d.lair@gmail.com">bc.3d.lair@gmail.com</a>
+        </p>
+      </div>
+    </section>
 
-Pricing is based on material cost, print time, complexity, and post-processing requirements. A quote and estimated turnaround time will be sent after reviewing your submission. A deposit may be required before printing begins. ALL ITEMS ARE PRINTED IN PLA (for the time being)
-
-If you are unsure about technical details, provide a description of what you need and I can help guide you through the options.
-
-I look forward to creating something great for you!
-
-I am a small business start up please be patient
-
-If you have any questions contact me:
-
-Instagram:
-<a href="https://www.instagram.com/bc.3d.lair/" target="_blank">
-  @bc.3d.lair
-</a>
-
-Facebook:
-<a href="https://www.facebook.com/profile.php?id=61587758056163" target="_blank">
-  My Facebook Profile
-</a>
-
-Email:
-<a href="mailto:bc.3d.lair@gmail.com">
-  bc.3d.lair@gmail.com
-</a>
-    </div>
-
-    <!-- FORM -->
-    <form id="orderForm"
-          action="https://formspree.io/f/YOUR_FORMSPREE_ID"
-          method="POST">
-
+    <form
+      id="orderForm"
+      action="https://formspree.io/f/YOUR_FORMSPREE_ID"
+      method="POST"
+      enctype="multipart/form-data"
+      novalidate
+    >
       <input type="hidden" name="_subject" value="New Custom 3D Order Request" />
 
-      <label>Full Name *</label>
-      <input type="text" name="Full Name" required>
+      <!-- Agreement timestamps (included in submission) -->
+      <input type="hidden" name="Agreement Timestamp (Local)" id="agreementTimestamp" value="" />
+      <input type="hidden" name="Agreement Timestamp (ISO)" id="agreementTimestampISO" value="" />
 
-      <label>Email Address *</label>
-      <input type="email" name="Email" required>
+      <!-- Optional drawn signature as a Data URL string -->
+      <input type="hidden" name="Signature Drawn (DataURL)" id="signatureDataUrl" value="" />
 
-      <label>Phone Number (optional)</label>
-      <input type="tel" name="Phone">
+      <section class="card">
+        <h2>Customer Info</h2>
 
-      <label>What item would you like printed? *</label>
-      <textarea name="Item Description" rows="4" required></textarea>
+        <label for="fullName">Full Name <span class="req">*</span></label>
+        <input id="fullName" type="text" name="Full Name" required minlength="2" />
 
-      <label>Do you have a file?</label>
-      <select name="File Available">
-        <option>No file - need design help</option>
-        <option>STL file ready</option>
-        <option>STEP file ready</option>
-        <option>Other format</option>
-      </select>
+        <label for="email">Email Address <span class="req">*</span></label>
+        <input id="email" type="email" name="Email" required />
 
-     <!-- COLOR SELECTION -->
-<label>Preferred Colors (Select up to 4) *</label>
+        <label for="phone">Phone Number (optional)</label>
+        <input id="phone" type="tel" name="Phone" />
+      </section>
 
-<div class="dropdown">
-  <button type="button" class="dropdown-btn">Select Colors</button>
+      <section class="card">
+        <h2>Order Details</h2>
 
-  <div class="dropdown-content">
-    <label><input type="checkbox" name="Color" value="Red"> Red</label>
-    <label><input type="checkbox" name="Color" value="Orange"> Orange</label>
-    <label><input type="checkbox" name="Color" value="Yellow"> Yellow</label>
-    <label><input type="checkbox" name="Color" value="Green"> Green</label>
-    <label><input type="checkbox" name="Color" value="Blue"> Blue</label>
-    <label><input type="checkbox" name="Color" value="Purple"> Purple</label>
-    <label><input type="checkbox" name="Color" value="Black"> Black</label>
-    <label><input type="checkbox" name="Color" value="White"> White</label>
-    <label><input type="checkbox" name="Color" value="Brown"> Brown</label>
-    <label><input type="checkbox" name="Color" value="Beige"> Beige</label>
-    <label><input type="checkbox" name="Color" value="Grey"> Grey</label>
-    <label><input type="checkbox" name="Color" value="Silver"> Silver</label>
-    <label><input type="checkbox" name="Color" value="Bronze"> Bronze</label>
-    <label><input type="checkbox" name="Color" value="Gold"> Gold</label>
-  </div>
-</div>
+        <label for="itemDesc">What item would you like printed? <span class="req">*</span></label>
+        <textarea id="itemDesc" name="Item Description" rows="4" required minlength="10"></textarea>
+        <p class="note">If you’re not sure about technical details, describe what you need and I’ll help.</p>
 
-<p id="colorError" class="error-text"></p>
+        <label for="fileAvailable">Do you have a file?</label>
+        <select id="fileAvailable" name="File Available">
+          <option value="No file - need design help">No file - need design help</option>
+          <option value="STL file ready">STL file ready</option>
+          <option value="3MF file ready">3MF file ready</option>
+          <option value="OBJ file ready">OBJ file ready</option>
+          <option value="AMF file ready">AMF file ready</option>
+          <option value="Other format">Other format</option>
+        </select>
 
-      <label>Estimated Size (Must not exceed 250mm x 250mm x 250mm) </label>
-      <input type="text" name="Size Estimate">
+        <label for="uploadFile">Upload your file (optional)</label>
+        <input
+          id="uploadFile"
+          type="file"
+          name="Uploaded File"
+          accept=".stl,.3mf,.obj,.amf,.png,.jpg,.jpeg,.pdf"
+        />
+        <p class="note">Accepted: STL, 3MF, OBJ, AMF, PNG, JPEG, PDF</p>
 
-      <label>Quantity *</label>
-      <input type="number" name="Quantity" min="1" required>
+        <label for="fileLink">File link (Google Drive/Dropbox) (optional)</label>
+        <input
+          id="fileLink"
+          type="url"
+          name="File Link"
+          placeholder="Paste a share link here"
+        />
+        <p class="note">If file upload doesn’t work, paste a share link here.</p>
 
-      <label>Needed By (if applicable)</label>
-      <input type="date" name="Deadline">
+        <!-- COLORS (dropdown + checkboxes) -->
+        <label>Preferred Colors (Select up to 4) <span class="req">*</span></label>
 
-      <label>Additional Details</label>
-      <textarea name="Additional Details" rows="4"></textarea>
+        <div class="dropdown" id="colorDropdown">
+          <button type="button" class="dropdown-btn" id="colorDropdownBtn" aria-expanded="false">
+            Select Colors
+          </button>
 
-      <button type="submit">Submit Custom Order Request</button>
+          <div class="dropdown-content" id="colorDropdownContent" role="listbox" aria-multiselectable="true">
+            <label><input type="checkbox" name="Color" value="Red"> Red</label>
+            <label><input type="checkbox" name="Color" value="Orange"> Orange</label>
+            <label><input type="checkbox" name="Color" value="Yellow"> Yellow</label>
+            <label><input type="checkbox" name="Color" value="Green"> Green</label>
+            <label><input type="checkbox" name="Color" value="Blue"> Blue</label>
+            <label><input type="checkbox" name="Color" value="Purple"> Purple</label>
+            <label><input type="checkbox" name="Color" value="Black"> Black</label>
+            <label><input type="checkbox" name="Color" value="White"> White</label>
+            <label><input type="checkbox" name="Color" value="Brown"> Brown</label>
+            <label><input type="checkbox" name="Color" value="Beige"> Beige</label>
+            <label><input type="checkbox" name="Color" value="Grey"> Grey</label>
+            <label><input type="checkbox" name="Color" value="Silver"> Silver</label>
+            <label><input type="checkbox" name="Color" value="Bronze"> Bronze</label>
+            <label><input type="checkbox" name="Color" value="Gold"> Gold</label>
+          </div>
+        </div>
 
-      <p id="formStatus"></p>
+        <p id="colorError" class="error-text" aria-live="polite"></p>
 
+        <label for="sizeEstimate">Estimated Size</label>
+        <input id="sizeEstimate" type="text" name="Size Estimate" placeholder='Example: 6in tall, 4x4in base' />
+
+        <label for="quantity">Quantity <span class="req">*</span></label>
+        <input id="quantity" type="number" name="Quantity" min="1" required />
+
+        <label for="deadline">Needed By (if applicable)</label>
+        <input id="deadline" type="date" name="Deadline" />
+
+        <label for="details">Additional Details</label>
+        <textarea id="details" name="Additional Details" rows="4"></textarea>
+      </section>
+
+      <section class="card">
+        <h2>Terms & Signature</h2>
+
+        <div class="disclaimer-box">
+          <strong>Order Disclaimer & Terms</strong>
+
+          <p class="note">
+            Please scroll to the bottom to enable the agreement checkbox.
+            Full page:
+            <a href="./terms.html" target="_blank" rel="noopener noreferrer">Terms & Conditions</a>
+          </p>
+
+          <div class="disclaimer-text" id="termsBox">
+By submitting this order request, you acknowledge and agree to the following terms:
+
+All custom 3D printed items are made to order based on the specifications provided by the customer. It is the customer’s responsibility to ensure all dimensions, design files, and details submitted are accurate. I am not responsible for errors resulting from incorrect measurements, files, or specifications provided.
+
+3D printed products may contain minor surface imperfections, layer lines, or slight dimensional tolerances inherent to the 3D printing process. These characteristics do not constitute defects.
+
+Colors may vary slightly from digital previews due to filament manufacturing variations and screen differences.
+
+Functional parts are printed based on the requested use, but I do not guarantee performance under high stress, heat exposure, outdoor conditions, or food contact unless explicitly agreed upon in writing. The customer assumes responsibility for proper and safe use of the product.
+
+Custom orders are non-refundable once printing has begun. Refunds or replacements due to printer malfunction or confirmed production error will be handled at my discretion.
+
+I reserve the right to refuse any order that violates intellectual property rights, trademark laws, or copyright protections.
+
+Submission of this form does not guarantee order acceptance. Orders are confirmed only after pricing approval and receipt of any required deposit.
+          </div>
+
+          <label class="disclaimer-check">
+            <input type="checkbox" id="agreeTerms" disabled required />
+            I have read and agree to the terms above.
+          </label>
+
+          <p id="termsError" class="error-text" aria-live="polite"></p>
+        </div>
+
+        <label for="typedSignature">Digital Signature (Type your full name) <span class="req">*</span></label>
+        <input
+          id="typedSignature"
+          type="text"
+          name="Digital Signature (Typed)"
+          required
+          minlength="2"
+          placeholder="Type your full name"
+        />
+
+        <p class="note">Optional: draw a signature below (adds an image string to the submission).</p>
+
+        <div class="sig-wrap">
+          <canvas id="sigCanvas" width="700" height="180"></canvas>
+          <div class="sig-actions">
+            <button type="button" id="sigClear" class="btn-secondary">Clear Signature</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" id="submitBtn">Submit Custom Order Request</button>
+        <p id="formStatus" class="status" aria-live="polite"></p>
+      </div>
     </form>
-  </div>
+  </main>
 
-  <!-- External JS -->
   <script src="script.js"></script>
 </body>
 </html>
