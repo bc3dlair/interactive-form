@@ -29,24 +29,14 @@
 
       <div class="contact">
         <p><strong>If you have any questions contact me:</strong></p>
-        <p>
-          Instagram:
-          <a href="https://www.instagram.com/bc.3d.lair/" target="_blank" rel="noopener noreferrer">@bc.3d.lair</a>
-        </p>
-        <p>
-          Facebook:
-          <a href="https://www.facebook.com/profile.php?id=61587758056163" target="_blank" rel="noopener noreferrer">My Facebook Profile</a>
-        </p>
-        <p>
-          Email:
-          <a href="mailto:bc.3d.lair@gmail.com">bc.3d.lair@gmail.com</a>
-        </p>
+        <p>Instagram: <a href="https://www.instagram.com/bc.3d.lair/" target="_blank" rel="noopener noreferrer">@bc.3d.lair</a></p>
+        <p>Facebook: <a href="https://www.facebook.com/profile.php?id=61587758056163" target="_blank" rel="noopener noreferrer">My Facebook Profile</a></p>
+        <p>Email: <a href="mailto:bc.3d.lair@gmail.com">bc.3d.lair@gmail.com</a></p>
       </div>
     </section>
 
     <!-- No action/method: handled by script.js using mailto -->
     <form id="orderForm" novalidate>
-
       <section class="card">
         <h2>Customer Info</h2>
 
@@ -94,7 +84,6 @@
           <button type="button" class="dropdown-btn" id="colorDropdownBtn" aria-expanded="false">
             Select Colors
           </button>
-
           <div class="dropdown-content" id="colorDropdownContent">
             <label><input type="checkbox" name="Color" value="Red"> Red</label>
             <label><input type="checkbox" name="Color" value="Orange"> Orange</label>
@@ -114,7 +103,7 @@
         </div>
         <p id="colorError" class="error-text" aria-live="polite"></p>
 
-        <label for="sizeEstimate">Estimated Size (may not exceed 250mm x 250mm x 250mm) </label>
+        <label for="sizeEstimate">Estimated Size</label>
         <input id="sizeEstimate" type="text" name="Size Estimate" placeholder="Example: 6in tall, 4x4in base" />
 
         <label for="quantity">Quantity <span class="req">*</span></label>
@@ -156,7 +145,7 @@ Submission of this form does not guarantee order acceptance. Orders are confirme
           </div>
 
           <label class="disclaimer-check">
-            <input type="checkbox" id="agreeTerms" disabled />
+            <input type="checkbox" id="agreeTerms" disabled required />
             I have read and agree to the terms above. <span class="req">*</span>
           </label>
 
@@ -164,14 +153,7 @@ Submission of this form does not guarantee order acceptance. Orders are confirme
         </div>
 
         <label for="typedSignature">Digital Signature (Type your full name) <span class="req">*</span></label>
-        <input
-          id="typedSignature"
-          type="text"
-          name="Digital Signature (Typed)"
-          required
-          minlength="2"
-          placeholder="Type your full name"
-        />
+        <input id="typedSignature" type="text" name="Digital Signature (Typed)" required minlength="2" placeholder="Type your full name" />
       </section>
 
       <div class="actions">
