@@ -130,38 +130,6 @@ button:hover { opacity: .9; }
 
 .disclaimer-check input[type="checkbox"] { width: auto; margin-top: 0; }
 
-/* Signature */
-.sig-wrap {
-  margin-top: 10px;
-  border: 1px solid #d9d9e3;
-  border-radius: 12px;
-  padding: 10px;
-  background: #fff;
-}
-
-#sigCanvas {
-  width: 100%;
-  height: 180px;
-  border: 1px dashed #d9d9e3;
-  border-radius: 10px;
-  touch-action: none;
-}
-
-.sig-actions { margin-top: 10px; display: flex; gap: 10px; }
-
-.btn-secondary {
-  width: auto;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #d9d9e3;
-  background: #fff;
-  color: #111;
-  cursor: pointer;
-  font-weight: 800;
-}
-
-.btn-secondary:hover { background: #f4f6f8; }
-
 /* Email notice */
 .email-notice {
   background: #fff4e5;
@@ -172,3 +140,18 @@ button:hover { opacity: .9; }
   margin-bottom: 12px;
   color: #663c00;
 }
+
+/* Utility */
+.hidden { display: none; }
+
+/* Instruction notice box */
+.notice {
+  background: #eef6ff;
+  border: 1px solid #b9dcff;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 12px;
+  color: #0b3a66;
+}
+
+.notice ol { margin: 10px 0 0 18px; }
