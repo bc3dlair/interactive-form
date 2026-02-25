@@ -2,56 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Interactive Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Custom 3D Order Form</title>
+
+  <!-- External CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <main class="card">
-    <h1>Contact Form</h1>
+  <div class="container">
 
-    <form id="contactForm" novalidate>
-      <label>
-        Name
-        <input id="name" name="name" type="text" minlength="2" required />
-        <small class="error" id="nameErr"></small>
-      </label>
+    <!-- HEADER -->
+    <h1>Custom 3D Order Form</h1>
 
-      <label>
-        Email
-        <input id="email" name="email" type="email" required />
-        <small class="error" id="emailErr"></small>
-      </label>
+    <!-- INTRO TEXT -->
+    <div class="intro">
+Thank you for your interest in a custom 3D printed item! Please complete this form with as much detail as possible so I can accurately review your request and provide a quote.
 
-      <label>
-        Reason
-        <select id="reason" name="reason" required>
-          <option value="">Select one…</option>
-          <option>Question</option>
-          <option>Custom Order</option>
-          <option>Support</option>
-        </select>
-        <small class="error" id="reasonErr"></small>
-      </label>
+Pricing is based on material cost, print time, complexity, and post-processing requirements. A quote and estimated turnaround time will be sent after reviewing your submission. A deposit may be required before printing begins. ALL ITEMS ARE PRINTED IN PLA (for the time being)
 
-      <label id="orderWrap" class="hidden">
-        What do you want printed?
-        <input id="orderDetails" name="orderDetails" type="text" />
-        <small class="hint">Example: “cable organizer for 2 desks”</small>
-      </label>
+If you are unsure about technical details, provide a description of what you need and I can help guide you through the options.
 
-      <label>
-        Message
-        <textarea id="message" name="message" rows="4" minlength="10" required></textarea>
-        <small class="error" id="messageErr"></small>
-      </label>
+I look forward to creating something great for you!
 
-      <button id="submitBtn" type="submit" disabled>Submit</button>
+I am a small business start up please be patient
 
-      <p class="status" id="status"></p>
+If you have any questions contact me:
+Instagram: https://www.instagram.com/bc.3d.lair/
+Facebook: https://www.facebook.com/profile.php?id=61587758056163
+Email: bc.3d.lair@gmail.com
+    </div>
+
+    <!-- FORM -->
+    <form id="orderForm"
+          action="https://formspree.io/f/YOUR_FORMSPREE_ID"
+          method="POST">
+
+      <input type="hidden" name="_subject" value="New Custom 3D Order Request" />
+
+      <label>Full Name *</label>
+      <input type="text" name="Full Name" required>
+
+      <label>Email Address *</label>
+      <input type="email" name="Email" required>
+
+      <label>Phone Number (optional)</label>
+      <input type="tel" name="Phone">
+
+      <label>What item would you like printed? *</label>
+      <textarea name="Item Description" rows="4" required></textarea>
+
+      <label>Do you have a file?</label>
+      <select name="File Available">
+        <option>No file - need design help</option>
+        <option>STL file ready</option>
+        <option>STEP file ready</option>
+        <option>Other format</option>
+      </select>
+
+      <label>Preferred Color *</label>
+      <input type="text" name="Color Preference" required>
+
+      <label>Estimated Size</label>
+      <input type="text" name="Size Estimate">
+
+      <label>Quantity *</label>
+      <input type="number" name="Quantity" min="1" required>
+
+      <label>Needed By (if applicable)</label>
+      <input type="date" name="Deadline">
+
+      <label>Additional Details</label>
+      <textarea name="Additional Details" rows="4"></textarea>
+
+      <button type="submit">Submit Custom Order Request</button>
+
+      <p id="formStatus"></p>
+
     </form>
-  </main>
+  </div>
 
+  <!-- External JS -->
   <script src="script.js"></script>
 </body>
 </html>
