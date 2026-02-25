@@ -50,6 +50,27 @@
         <label for="itemDesc">What item would you like printed? <span class="req">*</span></label>
         <textarea id="itemDesc" name="Item Description" rows="4" required minlength="10"></textarea>
 
+        <label for="hasUpload">Do you have an image or file you’d like to include? <span class="req">*</span></label>
+        <select id="hasUpload" name="Has Image/File to Include" required>
+          <option value="">Select one…</option>
+          <option value="No">No</option>
+          <option value="Yes">Yes</option>
+        </select>
+
+        <!-- Shows only if Yes -->
+        <div id="uploadInstructions" class="notice hidden">
+          <strong>How to include your file:</strong>
+          <ol>
+            <li>After you submit this form, your email app will open.</li>
+            <li><strong>Attach your file</strong> to that email (STL/3MF/OBJ/AMF, PNG/JPG, or PDF), then click <strong>Send</strong>.</li>
+            <li>If attaching is hard on your device, upload it to Google Drive/Dropbox and paste a share link below.</li>
+          </ol>
+
+          <label for="fileLink">File link (Google Drive/Dropbox) (optional)</label>
+          <input id="fileLink" type="url" name="File Link" placeholder="Paste a share link here" />
+          <p class="note">Make sure sharing is set so I can view/download it.</p>
+        </div>
+
         <!-- COLORS -->
         <label>Preferred Colors (Select up to 4) <span class="req">*</span></label>
         <div class="dropdown" id="colorDropdown">
@@ -73,7 +94,7 @@
         </div>
         <p id="colorError" class="error-text" aria-live="polite"></p>
 
-        <label for="sizeEstimate">Estimated Size (May not exceed 250mm x 250mm x 250mm) </label>
+        <label for="sizeEstimate">Estimated Size</label>
         <input id="sizeEstimate" type="text" name="Size Estimate" placeholder="Example: 6in tall, 4x4in base" />
 
         <label for="quantity">Quantity <span class="req">*</span></label>
@@ -124,20 +145,13 @@ Submission of this form does not guarantee order acceptance. Orders are confirme
 
         <label for="typedSignature">Digital Signature (Type your full name) <span class="req">*</span></label>
         <input id="typedSignature" type="text" name="Digital Signature (Typed)" required minlength="2" placeholder="Type your full name" />
-
-        <p class="note">Optional: draw a signature below (recorded as YES/NO in the email).</p>
-        <div class="sig-wrap">
-          <canvas id="sigCanvas" width="700" height="180"></canvas>
-          <div class="sig-actions">
-            <button type="button" id="sigClear" class="btn-secondary">Clear Signature</button>
-          </div>
-        </div>
       </section>
 
       <div class="actions">
         <div class="email-notice">
           <strong>Important:</strong> After clicking submit, your email app will open with your order details pre-filled.
           You must click <strong>Send</strong> in your email app to complete your request.
+          If you chose “Yes” for an image/file, attach it to the email (or include a share link).
         </div>
 
         <button type="submit" id="submitBtn">Create Email to Send</button>
