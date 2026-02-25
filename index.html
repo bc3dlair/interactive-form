@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Interactive Form</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="card">
+    <h1>Contact Form</h1>
+
+    <form id="contactForm" novalidate>
+      <label>
+        Name
+        <input id="name" name="name" type="text" minlength="2" required />
+        <small class="error" id="nameErr"></small>
+      </label>
+
+      <label>
+        Email
+        <input id="email" name="email" type="email" required />
+        <small class="error" id="emailErr"></small>
+      </label>
+
+      <label>
+        Reason
+        <select id="reason" name="reason" required>
+          <option value="">Select one…</option>
+          <option>Question</option>
+          <option>Custom Order</option>
+          <option>Support</option>
+        </select>
+        <small class="error" id="reasonErr"></small>
+      </label>
+
+      <label id="orderWrap" class="hidden">
+        What do you want printed?
+        <input id="orderDetails" name="orderDetails" type="text" />
+        <small class="hint">Example: “cable organizer for 2 desks”</small>
+      </label>
+
+      <label>
+        Message
+        <textarea id="message" name="message" rows="4" minlength="10" required></textarea>
+        <small class="error" id="messageErr"></small>
+      </label>
+
+      <button id="submitBtn" type="submit" disabled>Submit</button>
+
+      <p class="status" id="status"></p>
+    </form>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
