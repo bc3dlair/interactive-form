@@ -4,6 +4,18 @@ const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 const form = $("#orderForm");
 const statusEl = $("#formStatus");
 
+// ===== Has upload dropdown (instructions) =====
+const hasUpload = $("#hasUpload");
+const uploadInstructions = $("#uploadInstructions");
+const fileLink = $("#fileLink"); // inside the instructions box
+
+function toggleUploadInstructions() {
+  const yes = hasUpload.value === "Yes";
+  uploadInstructions.classList.toggle("hidden", !yes);
+}
+hasUpload.addEventListener("change", toggleUploadInstructions);
+toggleUploadInstructions();
+
 // ===== Color dropdown (max 4) =====
 const dropdownBtn = $("#colorDropdownBtn");
 const dropdownContent = $("#colorDropdownContent");
@@ -57,60 +69,6 @@ function enableTermsIfScrolled() {
 termsBox.addEventListener("scroll", enableTermsIfScrolled);
 enableTermsIfScrolled();
 
-// ===== Signature canvas (optional) =====
-const sigCanvas = $("#sigCanvas");
-const sigClear = $("#sigClear");
-let drawing = false;
-let hasInk = false;
-
-function canvasPos(e) {
-  const rect = sigCanvas.getBoundingClientRect();
-  const touch = e.touches?.[0];
-  const clientX = touch ? touch.clientX : e.clientX;
-  const clientY = touch ? touch.clientY : e.clientY;
-  return { x: clientX - rect.left, y: clientY - rect.top };
-}
-
-function startDraw(e) {
-  drawing = true;
-  hasInk = true;
-  const ctx = sigCanvas.getContext("2d");
-  const p = canvasPos(e);
-  ctx.beginPath();
-  ctx.moveTo(p.x, p.y);
-  e.preventDefault?.();
-}
-
-function draw(e) {
-  if (!drawing) return;
-  const ctx = sigCanvas.getContext("2d");
-  const p = canvasPos(e);
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.lineTo(p.x, p.y);
-  ctx.stroke();
-  e.preventDefault?.();
-}
-
-function endDraw() { drawing = false; }
-
-function clearSignature() {
-  const ctx = sigCanvas.getContext("2d");
-  ctx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-  hasInk = false;
-}
-
-sigCanvas.addEventListener("mousedown", startDraw);
-sigCanvas.addEventListener("mousemove", draw);
-sigCanvas.addEventListener("mouseup", endDraw);
-sigCanvas.addEventListener("mouseleave", endDraw);
-
-sigCanvas.addEventListener("touchstart", startDraw, { passive: false });
-sigCanvas.addEventListener("touchmove", draw, { passive: false });
-sigCanvas.addEventListener("touchend", endDraw);
-
-sigClear.addEventListener("click", clearSignature);
-
 // ===== Mailto submit =====
 const typedSignature = $("#typedSignature");
 
@@ -118,6 +76,13 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   statusEl.textContent = "";
   termsError.textContent = "";
+
+  // Require Yes/No selection
+  if (!hasUpload.value) {
+    statusEl.textContent = "Please select whether you have an image/file to include.";
+    hasUpload.focus();
+    return;
+  }
 
   // Validate colors
   const selectedColors = getSelectedColors();
@@ -161,16 +126,26 @@ form.addEventListener("submit", (e) => {
   lines.push(`Agreement Timestamp (Local): ${localTime}`);
   lines.push(`Agreement Timestamp (ISO): ${isoTime}`);
   lines.push(`Preferred Colors: ${selectedColors.join(", ")}`);
-  lines.push(`Drawn Signature: ${hasInk ? "YES" : "No"}`);
   lines.push("");
 
   const fd = new FormData(form);
   fd.forEach((value, key) => {
-    if (key === "Color") return; // already added
+    if (key === "Color") return; // already included
     if (String(value).trim() === "") return;
     lines.push(`${key}: ${value}`);
     lines.push("");
   });
+
+  // If they said Yes, add clear instructions + accepted file types
+  if (hasUpload.value === "Yes") {
+    const linkVal = (fileLink?.value || "").trim();
+    lines.push("FILE/IMAGE INSTRUCTIONS:");
+    lines.push("- Accepted file types: STL, 3MF, OBJ, AMF, PNG, JPG/JPEG, PDF");
+    lines.push("- Please attach your file/image to this email before sending.");
+    lines.push("- If you cannot attach it, include a Google Drive/Dropbox share link.");
+    if (linkVal) lines.push(`- Share link provided: ${linkVal}`);
+    lines.push("");
+  }
 
   lines.push("NOTE: Your email app opened with this message. Please click SEND to complete your request.");
 
