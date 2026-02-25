@@ -1,184 +1,272 @@
-:root { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-body { background: #f4f6f8; margin: 0; padding: 20px; }
+const form = $("#orderForm");
+const statusEl = $("#formStatus");
 
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  background: #fff;
-  padding: 28px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+// ===== Color dropdown (max 4) =====
+const dropdownBtn = $("#colorDropdownBtn");
+const dropdownContent = $("#colorDropdownContent");
+const colorError = $("#colorError");
+
+function getSelectedColors() {
+  return $$('input[name="Color"]:checked').map((c) => c.value);
 }
 
-.header h1 { margin: 0 0 8px 0; text-align: center; }
-
-.intro { margin: 12px 0 22px 0; color: #333; line-height: 1.45; }
-
-.contact a { color: #111; font-weight: 650; text-decoration: none; }
-.contact a:hover { text-decoration: underline; }
-
-.card {
-  border: 1px solid #e6e7ee;
-  border-radius: 14px;
-  padding: 18px;
-  margin: 16px 0;
-  background: #fff;
+function updateColorButtonText() {
+  const selected = getSelectedColors();
+  dropdownBtn.textContent = selected.length ? selected.join(", ") : "Select Colors";
 }
 
-.card h2 { margin: 0 0 12px 0; font-size: 1.05rem; }
-
-label { display: block; margin-top: 14px; font-weight: 650; }
-
-.req { color: #b00020; }
-
-input, select, textarea, button {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px;
-  margin-top: 6px;
-  border: 1px solid #d9d9e3;
-  border-radius: 10px;
-  font-size: 0.95rem;
+function setDropdownOpen(open) {
+  dropdownContent.style.display = open ? "block" : "none";
+  dropdownBtn.setAttribute("aria-expanded", open ? "true" : "false");
 }
 
-textarea { resize: vertical; }
+dropdownBtn.addEventListener("click", () => {
+  const isOpen = dropdownContent.style.display === "block";
+  setDropdownOpen(!isOpen);
+});
 
-.note { font-size: 0.85rem; color: #666; margin: 6px 0 0 0; }
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("#colorDropdown")) setDropdownOpen(false);
+});
 
-.actions { margin-top: 10px; }
+$$('input[name="Color"]').forEach((cb) => {
+  cb.addEventListener("change", () => {
+    const selected = getSelectedColors();
+    if (selected.length > 4) {
+      cb.checked = false;
+      colorError.textContent = "You can select up to 4 colors only.";
+      return;
+    }
+    colorError.textContent = "";
+    updateColorButtonText();
+  });
+});
 
-button {
-  margin-top: 18px;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 800;
-  background: #111;
-  color: #fff;
-  cursor: pointer;
+// ===== File validation =====
+const fileInput = $("#uploadFile");
+const allowedExt = new Set(["stl", "3mf", "obj", "amf", "png", "jpg", "jpeg", "pdf"]);
+
+fileInput.addEventListener("change", () => {
+  const f = fileInput.files?.[0];
+  if (!f) return;
+  const ext = f.name.split(".").pop().toLowerCase();
+  if (!allowedExt.has(ext)) {
+    alert("Invalid file type. Allowed: STL, 3MF, OBJ, AMF, PNG, JPEG, PDF.");
+    fileInput.value = "";
+  }
+});
+
+// ===== Scroll-to-bottom enables terms checkbox =====
+const termsBox = $("#termsBox");
+const agreeTerms = $("#agreeTerms");
+const termsError = $("#termsError");
+
+function enableTermsIfScrolled() {
+  const atBottom = termsBox.scrollTop + termsBox.clientHeight >= termsBox.scrollHeight - 2;
+  if (atBottom) agreeTerms.disabled = false;
+}
+termsBox.addEventListener("scroll", enableTermsIfScrolled);
+enableTermsIfScrolled();
+
+// ===== Signature canvas (optional) =====
+const sigCanvas = $("#sigCanvas");
+const sigClear = $("#sigClear");
+let drawing = false;
+let hasInk = false;
+
+function canvasPos(e) {
+  const rect = sigCanvas.getBoundingClientRect();
+  const touch = e.touches?.[0];
+  const clientX = touch ? touch.clientX : e.clientX;
+  const clientY = touch ? touch.clientY : e.clientY;
+  return { x: clientX - rect.left, y: clientY - rect.top };
 }
 
-button:hover { opacity: .9; }
-
-.status { margin-top: 12px; font-weight: 700; }
-
-.error-text { color: #b00020; font-size: 0.9rem; margin-top: 8px; }
-
-/* Dropdown multi-select */
-.dropdown { position: relative; margin-top: 6px; }
-
-.dropdown-btn {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #d9d9e3;
-  background: #fff;
-  cursor: pointer;
-  text-align: left;
-  font-weight: 650;
+function startDraw(e) {
+  drawing = true;
+  hasInk = true;
+  const ctx = sigCanvas.getContext("2d");
+  const p = canvasPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+  e.preventDefault?.();
 }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  width: 100%;
-  max-height: 260px;
-  overflow-y: auto;
-  background: #fff;
-  border: 1px solid #d9d9e3;
-  border-radius: 10px;
-  margin-top: 6px;
-  padding: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.08);
-  z-index: 1000;
+function draw(e) {
+  if (!drawing) return;
+  const ctx = sigCanvas.getContext("2d");
+  const p = canvasPos(e);
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+  e.preventDefault?.();
 }
 
-.dropdown-content label { display: block; margin: 6px 0; font-weight: 500; }
-.dropdown-content input[type="checkbox"] { width: auto; margin-right: 8px; }
+function endDraw() { drawing = false; }
 
-/* Disclaimer */
-.disclaimer-box {
-  margin-top: 10px;
-  padding: 16px;
-  border: 1px solid #d9d9e3;
-  border-radius: 12px;
-  background: #fafafa;
+function clearSignature() {
+  const ctx = sigCanvas.getContext("2d");
+  ctx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+  hasInk = false;
 }
 
-.disclaimer-text {
-  max-height: 210px;
-  overflow-y: auto;
-  font-size: 0.85rem;
-  color: #444;
-  white-space: pre-line;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px dashed #d9d9e3;
-  background: #fff;
+sigCanvas.addEventListener("mousedown", startDraw);
+sigCanvas.addEventListener("mousemove", draw);
+sigCanvas.addEventListener("mouseup", endDraw);
+sigCanvas.addEventListener("mouseleave", endDraw);
+
+sigCanvas.addEventListener("touchstart", startDraw, { passive: false });
+sigCanvas.addEventListener("touchmove", draw, { passive: false });
+sigCanvas.addEventListener("touchend", endDraw);
+
+sigClear.addEventListener("click", clearSignature);
+
+// ===== Human verification =====
+const hpField = $("#website");                 // honeypot
+const formLoadedAt = $("#formLoadedAt");       // timestamp at load
+const notRobotCheck = $("#notRobotCheck");     // checkbox
+const humanQuestion = $("#humanQuestion");     // text
+const humanAnswer = $("#humanAnswer");         // input
+const humanError = $("#humanError");           // error
+
+let expectedHumanAnswer = null;
+
+function initHumanCheck() {
+  formLoadedAt.value = new Date().toISOString();
+  const a = Math.floor(Math.random() * 9) + 1;
+  const b = Math.floor(Math.random() * 9) + 1;
+  expectedHumanAnswer = a + b;
+  humanQuestion.textContent = `${a} + ${b} = ?`;
+}
+initHumanCheck();
+
+// ===== Mailto submit =====
+const typedSignature = $("#typedSignature");
+const fileAvailable = $("#fileAvailable");
+const fileLink = $("#fileLink");
+const fileLinkError = $("#fileLinkError");
+
+function needsFileLink() {
+  const hasFileSelected = fileInput.files && fileInput.files.length > 0;
+  const saysHasFile = fileAvailable.value !== "No file - need design help";
+  return hasFileSelected || saysHasFile;
 }
 
-.disclaimer-check {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-  font-weight: 700;
-}
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  statusEl.textContent = "";
+  fileLinkError.textContent = "";
+  termsError.textContent = "";
+  humanError.textContent = "";
 
-.disclaimer-check input[type="checkbox"] { width: auto; margin-top: 0; }
+  // Robot checks
+  if (hpField.value.trim() !== "") {
+    statusEl.textContent = "Submission blocked.";
+    return;
+  }
 
-/* Signature */
-.sig-wrap {
-  margin-top: 10px;
-  border: 1px solid #d9d9e3;
-  border-radius: 12px;
-  padding: 10px;
-  background: #fff;
-}
+  const loaded = new Date(formLoadedAt.value).getTime();
+  if (Date.now() - loaded < 5000) {
+    humanError.textContent = "Please wait a few seconds and try again.";
+    return;
+  }
 
-#sigCanvas {
-  width: 100%;
-  height: 180px;
-  border: 1px dashed #d9d9e3;
-  border-radius: 10px;
-  touch-action: none;
-}
+  if (!notRobotCheck.checked) {
+    humanError.textContent = "Please check “I’m not a robot”.";
+    return;
+  }
 
-.sig-actions { margin-top: 10px; display: flex; gap: 10px; }
+  const ans = Number(String(humanAnswer.value || "").trim());
+  if (!Number.isFinite(ans) || ans !== expectedHumanAnswer) {
+    humanError.textContent = "Incorrect answer. Please try again.";
+    initHumanCheck();
+    humanAnswer.value = "";
+    return;
+  }
 
-.btn-secondary {
-  width: auto;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #d9d9e3;
-  background: #fff;
-  color: #111;
-  cursor: pointer;
-  font-weight: 800;
-}
+  // Validate colors
+  const selectedColors = getSelectedColors();
+  if (selectedColors.length === 0) {
+    colorError.textContent = "Please select at least one color.";
+    return;
+  }
+  colorError.textContent = "";
 
-.btn-secondary:hover { background: #f4f6f8; }
+  // Validate terms
+  if (agreeTerms.disabled || !agreeTerms.checked) {
+    termsError.textContent = "Please scroll to the bottom and agree to the terms.";
+    return;
+  }
 
-/* Honeypot hidden */
-.hp-wrap {
-  position: absolute !important;
-  left: -9999px !important;
-  top: -9999px !important;
-  width: 1px !important;
-  height: 1px !important;
-  overflow: hidden !important;
-}
+  // Validate required fields
+  const requiredIds = ["fullName", "email", "itemDesc", "quantity", "typedSignature"];
+  for (const id of requiredIds) {
+    const el = $("#" + id);
+    if (!el.checkValidity()) {
+      statusEl.textContent = "Please fill out all required fields correctly.";
+      el.focus();
+      return;
+    }
+  }
 
-/* Email notice */
-.email-notice {
-  background: #fff4e5;
-  border: 1px solid #ffd699;
-  padding: 14px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  margin-bottom: 12px;
-  color: #663c00;
-}
+  // Typed signature
+  if (!typedSignature.value.trim()) {
+    statusEl.textContent = "Please type your digital signature (full name).";
+    typedSignature.focus();
+    return;
+  }
+
+  // File link requirement when file is involved
+  if (needsFileLink() && !fileLink.value.trim()) {
+    fileLinkError.textContent = "Please paste a Google Drive/Dropbox share link for your file.";
+    fileLink.focus();
+    return;
+  }
+
+  // Build email body
+  const now = new Date();
+  const localTime = now.toLocaleString();
+  const isoTime = now.toISOString();
+
+  const lines = [];
+  lines.push("NEW CUSTOM 3D ORDER REQUEST");
+  lines.push("");
+  lines.push(`Agreement Timestamp (Local): ${localTime}`);
+  lines.push(`Agreement Timestamp (ISO): ${isoTime}`);
+  lines.push(`Preferred Colors: ${selectedColors.join(", ")}`);
+  lines.push(`Drawn Signature: ${hasInk ? "YES" : "No"}`);
+  lines.push("");
+
+  const file = fileInput.files?.[0];
+  if (file) {
+    lines.push(`Local File Selected (not attached): ${file.name}`);
+    lines.push("");
+  }
+
+  const fd = new FormData(form);
+  fd.forEach((value, key) => {
+    if (key === "Color") return;
+    if (key === "website") return; // honeypot
+    if (key === "Form Loaded At (ISO)") return;
+    if (value instanceof File) return;
+    if (String(value).trim() === "") return;
+    lines.push(`${key}: ${value}`);
+    lines.push("");
+  });
+
+  lines.push("NOTE: Your email app opened with this message. Please click SEND to complete your request.");
+  lines.push("If you have files, attach them manually OR include a share link above.");
+
+  const subject = "New Custom 3D Order Request";
+  const body = lines.join("\n");
+
+  // mailto length limits vary; keep it text-only
+  const mailto = `mailto:bc.3d.lair@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  statusEl.textContent = "Opening your email app...";
+  window.location.href = mailto;
+});
