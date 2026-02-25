@@ -18,17 +18,14 @@
         Thank you for your interest in a custom 3D printed item! Please complete this form with as much detail as possible so I can accurately review your request and provide a quote.
       </p>
       <p>
-        Pricing is based on material cost, print time, complexity, and post-processing requirements. A quote and estimated turnaround time will be sent after reviewing your submission. A deposit may be required before printing begins. <strong>ALL ITEMS ARE PRINTED IN PLA (for the time being)</strong>
+        Pricing is based on material cost, print time, complexity, and post-processing requirements. A quote and estimated turnaround time will be sent after reviewing your submission. A deposit may be required before printing begins.
+        <strong>ALL ITEMS ARE PRINTED IN PLA (for the time being)</strong>
       </p>
       <p>
         If you are unsure about technical details, provide a description of what you need and I can help guide you through the options.
       </p>
-      <p>
-        I look forward to creating something great for you!
-      </p>
-      <p>
-        I am a small business start up please be patient
-      </p>
+      <p>I look forward to creating something great for you!</p>
+      <p>I am a small business start up please be patient</p>
 
       <div class="contact">
         <p><strong>If you have any questions contact me:</strong></p>
@@ -47,21 +44,8 @@
       </div>
     </section>
 
-    <form
-      id="orderForm"
-      action="https://formspree.io/f/YOUR_FORMSPREE_ID"
-      method="POST"
-      enctype="multipart/form-data"
-      novalidate
-    >
-      <input type="hidden" name="_subject" value="New Custom 3D Order Request" />
-
-      <!-- Agreement timestamps (included in submission) -->
-      <input type="hidden" name="Agreement Timestamp (Local)" id="agreementTimestamp" value="" />
-      <input type="hidden" name="Agreement Timestamp (ISO)" id="agreementTimestampISO" value="" />
-
-      <!-- Optional drawn signature as a Data URL string -->
-      <input type="hidden" name="Signature Drawn (DataURL)" id="signatureDataUrl" value="" />
+    <!-- No action/method: handled entirely by script.js -->
+    <form id="orderForm" novalidate>
 
       <section class="card">
         <h2>Customer Info</h2>
@@ -81,7 +65,6 @@
 
         <label for="itemDesc">What item would you like printed? <span class="req">*</span></label>
         <textarea id="itemDesc" name="Item Description" rows="4" required minlength="10"></textarea>
-        <p class="note">If you’re not sure about technical details, describe what you need and I’ll help.</p>
 
         <label for="fileAvailable">Do you have a file?</label>
         <select id="fileAvailable" name="File Available">
@@ -97,29 +80,31 @@
         <input
           id="uploadFile"
           type="file"
-          name="Uploaded File"
+          name="Uploaded File (Local - cannot attach automatically)"
           accept=".stl,.3mf,.obj,.amf,.png,.jpg,.jpeg,.pdf"
         />
-        <p class="note">Accepted: STL, 3MF, OBJ, AMF, PNG, JPEG, PDF</p>
+        <p class="note">
+          Accepted: STL, 3MF, OBJ, AMF, PNG, JPEG, PDF. <strong>Note:</strong> this website cannot attach files to your email automatically.
+          Please upload your file to Google Drive/Dropbox and paste a link below.
+        </p>
 
-        <label for="fileLink">File link (Google Drive/Dropbox) (optional)</label>
+        <label for="fileLink">File link (Google Drive/Dropbox) (recommended)</label>
         <input
           id="fileLink"
           type="url"
           name="File Link"
           placeholder="Paste a share link here"
         />
-        <p class="note">If file upload doesn’t work, paste a share link here.</p>
+        <p id="fileLinkError" class="error-text" aria-live="polite"></p>
 
-        <!-- COLORS (dropdown + checkboxes) -->
+        <!-- COLORS -->
         <label>Preferred Colors (Select up to 4) <span class="req">*</span></label>
-
         <div class="dropdown" id="colorDropdown">
           <button type="button" class="dropdown-btn" id="colorDropdownBtn" aria-expanded="false">
             Select Colors
           </button>
 
-          <div class="dropdown-content" id="colorDropdownContent" role="listbox" aria-multiselectable="true">
+          <div class="dropdown-content" id="colorDropdownContent">
             <label><input type="checkbox" name="Color" value="Red"> Red</label>
             <label><input type="checkbox" name="Color" value="Orange"> Orange</label>
             <label><input type="checkbox" name="Color" value="Yellow"> Yellow</label>
@@ -136,7 +121,6 @@
             <label><input type="checkbox" name="Color" value="Gold"> Gold</label>
           </div>
         </div>
-
         <p id="colorError" class="error-text" aria-live="polite"></p>
 
         <label for="sizeEstimate">Estimated Size</label>
@@ -157,7 +141,6 @@
 
         <div class="disclaimer-box">
           <strong>Order Disclaimer & Terms</strong>
-
           <p class="note">
             Please scroll to the bottom to enable the agreement checkbox.
             Full page:
@@ -200,7 +183,7 @@ Submission of this form does not guarantee order acceptance. Orders are confirme
           placeholder="Type your full name"
         />
 
-        <p class="note">Optional: draw a signature below (adds an image string to the submission).</p>
+        <p class="note">Optional: draw a signature below (saved as text in the email).</p>
 
         <div class="sig-wrap">
           <canvas id="sigCanvas" width="700" height="180"></canvas>
@@ -211,7 +194,7 @@ Submission of this form does not guarantee order acceptance. Orders are confirme
       </section>
 
       <div class="actions">
-        <button type="submit" id="submitBtn">Submit Custom Order Request</button>
+        <button type="submit" id="submitBtn">Create Email to Send</button>
         <p id="formStatus" class="status" aria-live="polite"></p>
       </div>
     </form>
