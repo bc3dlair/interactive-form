@@ -60,10 +60,33 @@ Email: bc.3d.lair@gmail.com
         <option>Other format</option>
       </select>
 
-      <label>Preferred Color *</label>
-      <input type="text" name="Color Preference" required>
+     <!-- COLOR SELECTION -->
+<label>Preferred Colors (Select up to 4) *</label>
 
-      <label>Estimated Size</label>
+<div class="dropdown">
+  <button type="button" class="dropdown-btn">Select Colors</button>
+
+  <div class="dropdown-content">
+    <label><input type="checkbox" name="Color" value="Red"> Red</label>
+    <label><input type="checkbox" name="Color" value="Orange"> Orange</label>
+    <label><input type="checkbox" name="Color" value="Yellow"> Yellow</label>
+    <label><input type="checkbox" name="Color" value="Green"> Green</label>
+    <label><input type="checkbox" name="Color" value="Blue"> Blue</label>
+    <label><input type="checkbox" name="Color" value="Purple"> Purple</label>
+    <label><input type="checkbox" name="Color" value="Black"> Black</label>
+    <label><input type="checkbox" name="Color" value="White"> White</label>
+    <label><input type="checkbox" name="Color" value="Brown"> Brown</label>
+    <label><input type="checkbox" name="Color" value="Beige"> Beige</label>
+    <label><input type="checkbox" name="Color" value="Grey"> Grey</label>
+    <label><input type="checkbox" name="Color" value="Silver"> Silver</label>
+    <label><input type="checkbox" name="Color" value="Bronze"> Bronze</label>
+    <label><input type="checkbox" name="Color" value="Gold"> Gold</label>
+  </div>
+</div>
+
+<p id="colorError" class="error-text"></p>
+
+      <label>Estimated Size (Must not exceed 250mm x 250mm x 250mm) </label>
       <input type="text" name="Size Estimate">
 
       <label>Quantity *</label>
