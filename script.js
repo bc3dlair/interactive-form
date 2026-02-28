@@ -185,7 +185,6 @@ form?.addEventListener("submit", (e) => {
     lines.push(`Share link provided: ${linkVal || "N/A"}`);
     lines.push("");
   }
-
   lines.push("TERMS AGREEMENT");
   lines.push("--------------------------------");
   lines.push("Customer agreed to Terms & Conditions.");
