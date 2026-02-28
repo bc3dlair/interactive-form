@@ -35,7 +35,6 @@
       </div>
     </section>
 
-    <!-- No action/method: handled by script.js using mailto -->
     <form id="orderForm" novalidate>
       <section class="card">
         <h2>Customer Info</h2>
@@ -47,7 +46,7 @@
         <input id="email" type="email" name="Email" required />
 
         <label for="phone">Phone Number (optional)</label>
-        <input id="phone" type="tel" name="Phone" />
+        <input id="phone" type="tel" name="Phone" inputmode="tel" placeholder="(555) 123-4567" />
       </section>
 
       <section class="card">
@@ -63,14 +62,12 @@
           <option value="Yes">Yes</option>
         </select>
 
-        <!-- Shows only if Yes -->
         <div id="uploadInstructions" class="notice hidden">
           <strong>How to include your file:</strong>
           <p class="note"><strong>Accepted file types:</strong> STL, 3MF, OBJ, AMF, PNG, JPG/JPEG, PDF</p>
           <ol>
-            <li>After you submit this form, your email app will open.</li>
-            <li><strong>Attach your file/image</strong> to that email, then click <strong>Send</strong>.</li>
-            <li>If attaching is hard on your device, upload it to Google Drive/Dropbox and paste a share link below.</li>
+            <li>After you generate your PDF, attach your file(s) and the PDF when emailing.</li>
+            <li>If attaching is hard on your device, upload to Google Drive/Dropbox and paste a share link below.</li>
           </ol>
 
           <label for="fileLink">File link (Google Drive/Dropbox) (optional)</label>
@@ -78,7 +75,6 @@
           <p class="note">Make sure sharing is set so I can view/download it.</p>
         </div>
 
-        <!-- COLORS -->
         <label>Preferred Colors (Select up to 4) <span class="req">*</span></label>
         <div class="dropdown" id="colorDropdown">
           <button type="button" class="dropdown-btn" id="colorDropdownBtn" aria-expanded="false">
@@ -103,7 +99,7 @@
         </div>
         <p id="colorError" class="error-text" aria-live="polite"></p>
 
-        <label for="sizeEstimate">Estimated Size (May not exceed 250mm(height) x 250mm(width) x 250mm(depth))</label>
+        <label for="sizeEstimate">Estimated Size (must not exceed 250mm x 250mm 250mm)</label>
         <input id="sizeEstimate" type="text" name="Size Estimate" placeholder="Example: 6in tall, 4x4in base" />
 
         <label for="quantity">Quantity <span class="req">*</span></label>
@@ -158,17 +154,18 @@ Submission of this form does not guarantee order acceptance. Orders are confirme
 
       <div class="actions">
         <div class="email-notice">
-          <strong>Important:</strong> After clicking submit, your email app will open with your order details pre-filled.
-          You must click <strong>Send</strong> in your email app to complete your request.
-          If you chose “Yes” for an image/file, attach it to the email (or include a share link).
+          <strong>Important:</strong> This form generates a PDF (preview + download). After it opens, please email the PDF to
+          <a href="mailto:bc.3d.lair@gmail.com">bc.3d.lair@gmail.com</a>. If you chose “Yes” for an image/file, attach it too (or include a share link).
         </div>
 
-        <button type="submit" id="submitBtn">Create Email to Send</button>
+        <button type="submit" id="submitBtn">Generate PDF Preview</button>
         <p id="formStatus" class="status" aria-live="polite"></p>
       </div>
     </form>
   </main>
 
+  <!-- jsPDF CDN (needed for PDF generation on GitHub Pages) -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
